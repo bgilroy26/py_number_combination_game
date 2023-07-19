@@ -82,14 +82,14 @@ def evaluate_target(expr_pair):
             else:
                 return evaluate_target(create_target(save))
 
-    return expr
+    return int(expr[0])
 
 ##############
 # BEGIN GAME #
 ##############
 for _ in range(6):
     while not unique_switch:
-        candidate = math.floor(random.random()*25)
+        candidate = math.floor(random.random()*24 + 1)
         if candidate not in digits:
             digits.append(candidate)
         unique_switch = True
