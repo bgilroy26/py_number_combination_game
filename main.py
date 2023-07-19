@@ -83,6 +83,11 @@ def evaluate_target(expr_pair):
     return int(expr[0])
 
 def play(nums, goal):
+    print()
+    print("##############################################")
+    print("##### WELCOME TO NUMBER COMBINATION GAME #####")
+    print("##############################################")
+    print()
     first_number_choice = None
     second_number_choice = None
     starter_nums = digits
