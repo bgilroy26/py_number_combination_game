@@ -2,8 +2,6 @@ import random
 import math
 import itertools
 
-first_number_choice = None
-second_number_choice = None
 digits = []
 operations = ['+', '-', '*', r'/']
 unique_switch = False
@@ -84,74 +82,95 @@ def evaluate_target(expr_pair):
 
     return int(expr[0])
 
+def play(nums, goal):
+    first_number_choice = None
+    second_number_choice = None
+    starter_nums = digits
+
+    while True:
+        print(f"This is your target: {target}")
+        print()
+        print("These are your numbers")
+        print("    ".join(f'{num}' for num in digits))
+
+        print()
+
+        print("These are your operations")
+        print("     ".join(f'{op}' for op in operations))
+
+        print()
+        print('Press "r" to restart')
+        print('Press "x" to quit')
+
+        while not first_number_choice:
+            try:
+                first_number_choice = input("Choose a first number ")
+                if first_number_choice == 'x':
+                    break
+                if first_number_choice == 'r':
+                    break
+                first_number_choice = int(first_number_choice)
+                digits.remove(first_number_choice)
+            except ValueError:
+                print("Number not in list")
+                first_number_choice = None
+                continue
+        if first_number_choice == 'x':
+            return None
+        if first_number_choice == 'r':
+            play(starter_nums, goal)
+
+
+        while not second_number_choice:
+            try:
+                second_number_choice = input("Choose a second number ")
+                if second_number_choice == 'x':
+                    break
+                if second_number_choice == 'r':
+                    break
+                second_number_choice = int(second_number_choice)
+                digits.remove(second_number_choice)
+            except ValueError:
+                print("Number not in list")
+                second_number_choice = None
+                continue
+        if second_number_choice == 'x':
+            return None
+        if second_number_choice == 'r':
+            play(starter_nums, goal)
+
+        operation_choice = input("Choose an operation ")
+        if operation_choice == 'x':
+            return None
+        if operation_choice == 'r':
+            play(starter_nums, goal)
+
+        new_value = evaluate_expression(first_number_choice,
+                                        second_number_choice,
+                                        operation_choice
+                                        )
+
+        if new_value == goal:
+            print("YOU WIN, YOU MARVELOUS DEVIL!")
+            break
+        else:
+            digits.append(new_value)
+
+        first_number_choice = None
+        second_number_choice = None
+
 ##############
 # BEGIN GAME #
 ##############
-for _ in range(6):
+while len(digits) < 6:
     while not unique_switch:
         candidate = math.floor(random.random()*24 + 1)
         if candidate not in digits:
             digits.append(candidate)
+
         unique_switch = True
     unique_switch = False
 
 target = evaluate_target(create_target(digits))
 
-while first_number_choice != 'x':
-    print(f"This is your target: {target}")
-    print()
-    print("These are your numbers")
-    print("    ".join(f'{num}' for num in digits))
-
-    print()
-
-    print("These are your operations")
-    print("     ".join(f'{op}' for op in operations))
-
-    print()
-    print('Press "x" to quit')
-    while not first_number_choice:
-        try:
-            first_number_choice = input("Choose a first number ")
-            if first_number_choice == 'x':
-                break
-            first_number_choice = int(first_number_choice)
-            digits.remove(first_number_choice)
-        except ValueError:
-            print("Number not in list")
-            first_number_choice = None
-            continue
-    if first_number_choice == 'x':
-        break
-
-    while not second_number_choice:
-        try:
-            second_number_choice = input("Choose a second number ")
-            if second_number_choice == 'x':
-                break
-            second_number_choice = int(second_number_choice)
-            digits.remove(second_number_choice)
-        except ValueError:
-            print("Number not in list")
-            second_number_choice = None
-            continue
-    if second_number_choice == 'x':
-        break
-
-    operation_choice = input("Choose an operation ")
-    if operation_choice == 'x':
-        break
-
-    new_value = evaluate_expression(first_number_choice,
-                                      second_number_choice,
-                                      operation_choice
-                                      )
-
-    if new_value == target:
-        print("YOU WIN, YOU MARVELOUS DEVIL!")
-        break
-    else:
-        digits.append(new_value)
-
-    first_number_choice = None
-    second_number_choice = None
+play(digits, target)
