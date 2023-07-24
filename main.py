@@ -41,7 +41,7 @@ def create_target(numbers):
 
 
 
-#expr is the numbers and operations from create_target
+# expr is the numbers and operations from create_target
 def evaluate_target(expr_pair):
     expr = expr_pair[0]
     save = expr_pair[1]
@@ -90,13 +90,13 @@ def play(nums, goal):
     print()
     first_number_choice = None
     second_number_choice = None
-    starter_nums = digits
+    starter_nums = nums
 
     while True:
-        print(f"This is your target: {target}")
+        print(f"This is your target: {goal}")
         print()
         print("These are your numbers")
-        print("    ".join(f'{num}' for num in digits))
+        print("    ".join(f'{num}' for num in nums))
 
         print()
 
@@ -108,14 +108,14 @@ def play(nums, goal):
         print('Press "x" to quit')
 
         while not first_number_choice:
+            first_number_choice = input("Choose a first number ")
+            if first_number_choice == 'x':
+                break
+            if first_number_choice == 'r':
+                break
+            first_number_choice = int(first_number_choice)
             try:
-                first_number_choice = input("Choose a first number ")
-                if first_number_choice == 'x':
-                    break
-                if first_number_choice == 'r':
-                    break
-                first_number_choice = int(first_number_choice)
-                digits.remove(first_number_choice)
+                nums.remove(first_number_choice)
             except ValueError:
                 print("Number not in list")
                 first_number_choice = None
@@ -127,14 +127,14 @@ def play(nums, goal):
 
 
         while not second_number_choice:
+            second_number_choice = input("Choose a second number ")
+            if second_number_choice == 'x':
+                break
+            if second_number_choice == 'r':
+                break
+            second_number_choice = int(second_number_choice)
             try:
-                second_number_choice = input("Choose a second number ")
-                if second_number_choice == 'x':
-                    break
-                if second_number_choice == 'r':
-                    break
-                second_number_choice = int(second_number_choice)
-                digits.remove(second_number_choice)
+                nums.remove(second_number_choice)
             except ValueError:
                 print("Number not in list")
                 second_number_choice = None
@@ -159,7 +159,7 @@ def play(nums, goal):
             print("YOU WIN, YOU MARVELOUS DEVIL!")
             break
         else:
-            digits.append(new_value)
+            nums.append(new_value)
 
         first_number_choice = None
         second_number_choice = None
