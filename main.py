@@ -49,10 +49,12 @@ def evaluate_target(expr_pair):
     expr.pop()
 
     len_switch = True
+    in_list_switch = True
     positive_switch = True
     integer_switch = True
     abs_switch = True
-    while len_switch or positive_switch or integer_switch or abs_switch:
+    while len_switch or in_list_switch or positive_switch \
+            or integer_switch or abs_switch:
         first_number = expr.pop()
         operation = expr.pop()
         second_number = expr.pop()
@@ -64,6 +66,11 @@ def evaluate_target(expr_pair):
 
         if len(expr) == 1:
             len_switch = False
+        if not len_switch:
+            if expr[0] not in save:
+                in_list_switch = False
+            else:
+                return evaluate_target(create_target(save))
         if not len_switch:
             if expr[0] < 400:
                 abs_switch = False
@@ -80,6 +87,7 @@ def evaluate_target(expr_pair):
             else:
                 return evaluate_target(create_target(save))
 
+
     return int(expr[0])
 
 def play(nums, goal):
@@ -90,6 +98,7 @@ def play(nums, goal):
     print()
     first_number_choice = None
     second_number_choice = None
+    operation_choice = None
     starter_nums = nums
 
     while True:
@@ -125,9 +134,31 @@ def play(nums, goal):
         if first_number_choice == 'r':
             play(starter_nums, goal)
 
+        while not operation_choice:
+            operation_choice = input("Choose an operation ")
+            if operation_choice not in ['+','-','*',r'/']:
+                operation_choice = None
+                continue
+            if operation_choice == 'x':
+                return None
+            if operation_choice == 'r':
+                play(starter_nums, goal)
+
 
         while not second_number_choice:
             second_number_choice = input("Choose a second number ")
+            # test for divisibility
+            if operation_choice == r'/' and \
+                    int(second_number_choice) % int(first_number_choice) != 0:
+                print("Divisor must divide evenly")
+                second_number_choice = None
+                continue
+            # test that subtraction result is >= 1
+            if operation_choice == '-' and \
+                    int(second_number_choice) >= int(first_number_choice):
+                print("Second term in subtraction must be less than first term")
+                second_number_choice = None
+                continue
             if second_number_choice == 'x':
                 break
             if second_number_choice == 'r':
@@ -144,12 +175,6 @@ def play(nums, goal):
         if second_number_choice == 'r':
             play(starter_nums, goal)
 
-        operation_choice = input("Choose an operation ")
-        if operation_choice == 'x':
-            return None
-        if operation_choice == 'r':
-            play(starter_nums, goal)
-
         new_value = evaluate_expression(first_number_choice,
                                         second_number_choice,
                                         operation_choice
@@ -162,6 +187,7 @@ def play(nums, goal):
             nums.append(new_value)
 
         first_number_choice = None
+        operation_choice = None
         second_number_choice = None
 
 ##############
