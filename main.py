@@ -37,6 +37,9 @@ def create_target(numbers):
 
     combo = itertools.zip_longest(pre_target_numbers, pre_target_operations)
 
+    # remove None from tail
+    combo.pop()
+
     # flatten combo and return list of numbers and operations
     return ([item for sublist in combo for item in sublist], numbers)
 
@@ -46,8 +49,6 @@ def create_target(numbers):
 def evaluate_target(expr_pair):
     expr = expr_pair[0]
     save = expr_pair[1]
-    # remove None from tail
-    expr.pop()
 
     len_switch = True
     in_list_switch = True
