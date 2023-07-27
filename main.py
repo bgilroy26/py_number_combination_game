@@ -1,6 +1,7 @@
 import random
 import math
 import itertools
+import collections
 
 digits = []
 operations = ['+', '-', '*', r'/']
@@ -26,7 +27,7 @@ def evaluate_expression(first, second, op):
 # numbers is a list of 6 numbers that we
 # have at the beginning of the game
 def create_target(numbers):
-    save = numbers
+    save = numbers.copy()
     # generate the number of numbers that you will use (at least 3)
     numbers_used = math.floor(random.random()*3)+3
     operations_used = numbers_used - 1
@@ -99,7 +100,7 @@ def play(nums, goal):
     first_number_choice = None
     second_number_choice = None
     operation_choice = None
-    starter_nums = nums
+    starter_nums = nums.copy()
 
     while True:
         print(f"This is your target: {goal}")
@@ -132,17 +133,17 @@ def play(nums, goal):
         if first_number_choice == 'x':
             return None
         if first_number_choice == 'r':
-            play(starter_nums, goal)
+            return play(starter_nums, goal)
 
         while not operation_choice:
             operation_choice = input("Choose an operation ")
-            if operation_choice not in ['+','-','*',r'/']:
-                operation_choice = None
-                continue
             if operation_choice == 'x':
                 return None
             if operation_choice == 'r':
-                play(starter_nums, goal)
+                return play(starter_nums, goal)
+            if operation_choice not in ['+', '-', '*', r'/']:
+                operation_choice = None
+                continue
 
 
         while not second_number_choice:
@@ -173,7 +174,7 @@ def play(nums, goal):
         if second_number_choice == 'x':
             return None
         if second_number_choice == 'r':
-            play(starter_nums, goal)
+            return play(starter_nums, goal)
 
         new_value = evaluate_expression(first_number_choice,
                                         second_number_choice,
@@ -193,14 +194,16 @@ def play(nums, goal):
 ##############
 # BEGIN GAME #
 ##############
-while len(digits) < 6:
-    while not unique_switch:
-        candidate = math.floor(random.random()*24 + 1)
-        if candidate not in digits:
-            digits.append(candidate)
 
-        unique_switch = True
-    unique_switch = False
+# Create 6 unique numbers between 1 and 25 inclusive
+digits = [math.floor(random.random()*24 + 1) for _ in range(6)]
+while len(digits) != len(set(digits)):
+    dupes = [item for item, count in collections.Counter(digits).items()
+             if count > 1]
+    retries = len(dupes)
+    for dupe in dupes:
+        digits.remove(dupe)
+    digits.extend(math.floor(random.random()*24 + 1) for _ in range(retries))
 
 target = evaluate_target(create_target(digits))
 
